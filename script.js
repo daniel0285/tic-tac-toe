@@ -1,5 +1,26 @@
-const ticTacToe = (function () {
-  const gameBoard = Array(9).fill("empty");
+const gameBoard = (function () {
+  const board = Array(9).fill("empty");
+
+  const isGameOver = () => board.every((el) => el !== "empty");
+
+  const fill = (index, symbol) => {
+    if (board[index] === "empty") {
+      board[index] = symbol;
+    }
+  };
+
+  const getBoard = () => board;
+
+  return { isGameOver, fill, getBoard };
+})();
+
+const player = (function () {
+  const makePlayer = (name, symbol) => ({ name, symbol });
+
+  return { makePlayer };
+})();
+
+const gameController = (function () {
   const winningCombination = [
     [0, 1, 2],
     [3, 4, 5],
@@ -13,11 +34,9 @@ const ticTacToe = (function () {
   const players = [];
   let currentPlayer;
 
-  const makePlayer = (name, symbol) => ({ name, symbol });
-
   const addPlayer = (name, symbol) => {
-    const newPlayer = makePlayer(name, symbol);
-    if (players.length <= 1) {
+    const newPlayer = player.makePlayer(name, symbol);
+    if (players.length < 2) {
       players.push(newPlayer);
     }
 
@@ -26,40 +45,38 @@ const ticTacToe = (function () {
     }
   };
 
+  const board = gameBoard.getBoard();
+
+  const checkWinner = () => {
+    return winningCombination.some((combination) =>
+      combination.every((index) => board[index] === currentPlayer.symbol)
+    );
+  };
+
   const switchPlayer = () => {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
   };
 
-  const gameController = (index) => {
-    if (gameBoard[index] !== "empty" || index > gameBoard.length || index < 0) {
+  const controller = (index) => {
+    if (board[index] !== "empty" || index > board.length || index < 0) {
       console.log("invalid input");
       return;
     }
 
-    fillGameBoard(index, currentPlayer.symbol);
+    gameBoard.fill(index, currentPlayer.symbol);
 
     if (checkWinner()) {
       console.log(`The winner is ${currentPlayer.name}`);
-      console.log(gameBoard);
-    } else if (isGameOver()) {
+      console.log(board);
+    } else if (gameBoard.isGameOver()) {
       console.log(`It's a draw!`);
-      console.log(gameBoard);
+      console.log(board);
     } else {
       console.log(`Not Finished`);
-      console.log(gameBoard);
+      console.log(board);
       switchPlayer();
     }
   };
-  const fillGameBoard = (index, symbol) => {
-    gameBoard[index] = symbol;
-  };
 
-  const checkWinner = () => {
-    return winningCombination.some((combination) =>
-      combination.every((index) => gameBoard[index] === currentPlayer.symbol)
-    );
-  };
-  const isGameOver = () => gameBoard.every((el) => el !== "empty");
-
-  return { addPlayer, gameController, players, gameBoard, currentPlayer };
+  return { controller, addPlayer };
 })();
