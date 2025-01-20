@@ -4,6 +4,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  outline: 1px solid red;
 }
 
 html,
@@ -22,6 +24,15 @@ body {
   align-items: center;
 }
 
+#tic-tac-toe-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  width: 100%;
+}
+
 #tic-tac-toe-board {
   height: 50%;
   width: 40%;
@@ -30,5 +41,17 @@ body {
 }
 
 button {
-  font-size: 4rem;
+  font-size: 1rem;
+}
+
+#tic-tac-toe-wrapper.hidden {
+  display: none;
+}
+
+dialog {
+  position: absolute;
+  top: 50%;
+
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

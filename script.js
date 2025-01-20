@@ -1,6 +1,5 @@
 const gameBoard = (function () {
   const board = Array(9).fill("empty");
-
   const isGameOver = () => board.every((el) => el !== "empty");
 
   const fill = (index, symbol) => {
@@ -10,7 +9,6 @@ const gameBoard = (function () {
   };
 
   const getBoard = () => board;
-
   const resetBoard = () => board.fill("empty");
 
   return { isGameOver, fill, getBoard, resetBoard };
@@ -18,7 +16,6 @@ const gameBoard = (function () {
 
 const player = (function () {
   const makePlayer = (name, symbol) => ({ name, symbol });
-
   return { makePlayer };
 })();
 
@@ -33,24 +30,20 @@ const gameController = (function () {
     [0, 4, 8],
     [2, 4, 6],
   ];
+
   const players = [
-    { name: "Player 1", symbol: "X", score: 0 },
-    { name: "Player 2", symbol: "O", score: 0 },
+    { name: " ", symbol: "X", score: 0 },
+    { name: " ", symbol: "O", score: 0 },
   ];
+
+  let isFinished = false;
   let currentPlayer;
   currentPlayer = players[0];
-  let isFinished = false;
 
-  // const addPlayer = (name, symbol) => {
-  //   const newPlayer = player.makePlayer(name, symbol);
-  //   if (players.length < 2) {
-  //     players.push(newPlayer);
-  //   }
-
-  //   if (players.length === 1) {
-  //     currentPlayer = players[0];
-  //   }
-  // };
+  const assignPlayerNames = (object) => {
+    players[0].name = object.playerX;
+    players[1].name = object.playerO;
+  };
 
   const board = gameBoard.getBoard();
 
@@ -74,8 +67,10 @@ const gameController = (function () {
   };
 
   const controller = (index, event) => {
+    const resultText = document.querySelector(".game-result");
+
     if (board[index] !== "empty" || index > board.length || index < 0) {
-      console.log("invalid input");
+      resultText.textContent = "invalid input";
       return;
     }
 
@@ -85,10 +80,11 @@ const gameController = (function () {
     }
 
     if (checkWinner()) {
-      console.log(`The winner is ${currentPlayer.name}`);
+      resultText.textContent = `The winner is ${currentPlayer.name}`;
       isFinished = true;
     } else if (gameBoard.isGameOver()) {
       console.log(`It's a draw!`);
+      resultText.textContent = `It's a draw!`;
       isFinished = true;
     } else {
       console.log(`Not Finished`);
@@ -96,10 +92,10 @@ const gameController = (function () {
     }
   };
 
-  return { controller, resetGame };
+  return { controller, resetGame, assignPlayerNames };
 })();
 
-const displayGameBoard = () => {
+const renderGameBoard = () => {
   const ticTacToeBoard = document.getElementById("tic-tac-toe-board");
   ticTacToeBoard.innerHTML = "";
   const fragment = document.createDocumentFragment();
@@ -115,22 +111,43 @@ const displayGameBoard = () => {
   ticTacToeBoard.appendChild(fragment);
 };
 
-const eventHandler = (event) => {
+const displayGame = () => {
+  renderGameBoard();
+  const ticTacToeWrapper = document.getElementById("tic-tac-toe-wrapper");
+  ticTacToeWrapper.classList.remove("hidden");
+};
+
+const insertPlayerData = (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const playerNames = Object.fromEntries(formData);
+  gameController.assignPlayerNames(playerNames);
+};
+
+const displayForm = () => {
+  const modal = document.getElementById("modal");
+  const gameForm = document.getElementById("game-form");
+  modal.showModal();
+
+  gameForm.addEventListener("submit", (event) => {
+    insertPlayerData(event);
+    modal.close();
+    displayGame();
+  });
+};
+
+const clickHandler = (event) => {
   if (event.target.classList.contains("spots")) {
     const indexTarget = event.target.dataset.index;
-
-    const indexText = document.querySelector(".index-number");
-    indexText.textContent = event.target.dataset.index;
-
     gameController.controller(indexTarget, event);
   }
 
   if (event.target.id === "reset") {
-    displayGameBoard();
+    renderGameBoard();
     gameController.resetGame();
   }
 };
 
-document.addEventListener("click", (event) => eventHandler(event));
+document.addEventListener("click", (event) => clickHandler(event));
 
-displayGameBoard();
+displayForm();

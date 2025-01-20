@@ -9,10 +9,26 @@
 </head>
 
 <body>
-    <h1>Tic Tac Toe</h1>
-    <p class="index-number"></p>
-    <main id="tic-tac-toe-board"></main>
-    <button id="reset">reset game</button>
+    <main id="tic-tac-toe-wrapper" class="hidden">
+        <h1>Tic Tac Toe</h1>
+        <p class="game-result"></p>
+        <section id="tic-tac-toe-board"></section>
+        <button id="reset">reset game</button>
+    </main>
+    <dialog id="modal">
+        <form action="" id="game-form">
+            <div class="input-field">
+                <label for="player-x">Player X Name</label>
+                <input type="text" id="player-x" name="playerX">
+            </div>
+            <div class="input-field">
+                <label for="player-o">Player O Name</label>
+                <input type="text" id="player-o" name="playerO">
+            </div>
+            <button type="submit">Start Game</button>
+        </form>
+    </dialog>
+
     <script src="script.js"></script>
 </body>
 
