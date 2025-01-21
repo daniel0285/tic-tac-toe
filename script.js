@@ -1,6 +1,6 @@
 const gameBoard = (function () {
   const board = Array(9).fill("empty");
-  const isGameOver = () => board.every((el) => el !== "empty");
+  const isBoardFull = () => board.every((el) => el !== "empty");
 
   const fill = (index, symbol) => {
     if (board[index] === "empty") {
@@ -11,7 +11,7 @@ const gameBoard = (function () {
   const getBoard = () => board;
   const resetBoard = () => board.fill("empty");
 
-  return { isGameOver, fill, getBoard, resetBoard };
+  return { isBoardFull, fill, getBoard, resetBoard };
 })();
 
 const player = (function () {
@@ -41,7 +41,7 @@ const game = (function () {
   ];
   const board = gameBoard.getBoard();
 
-  let isFinished = false;
+  let isRoundFinished = false;
   let currentPlayer;
   currentPlayer = players[0];
 
@@ -51,21 +51,33 @@ const game = (function () {
   };
 
   const restartGame = () => {
-    isFinished = false;
-    players[0].score = 0;
-    players[1].score = 0;
+    isRoundFinished = false;
+    resetPlayersScore();
+    currentPlayer = players[0];
     gameBoard.resetBoard();
     updatePlayerScore();
     resetText();
   };
 
   const nextRound = () => {
-    isFinished = false;
+    isRoundFinished = false;
+    currentPlayer = players[0];
     gameBoard.resetBoard();
     resetText();
   };
 
+  const isGameOver = () => {
+    if (players[0].score === 2 || players[1].score === 2) {
+      resultText.textContent = `${currentPlayer.name} won the game`;
+      return true;
+    }
+  };
+
   const resetText = () => (resultText.innerText = "");
+  const resetPlayersScore = () => {
+    players[0].score = 0;
+    players[1].score = 0;
+  };
 
   const checkWinner = () => {
     return winningCombination.some((combination) =>
@@ -89,12 +101,14 @@ const game = (function () {
   };
 
   const controller = (index, event) => {
+    if (isGameOver()) return;
+
     if (board[index] !== "empty" || index > board.length || index < 0) {
       resultText.textContent = "invalid input";
       return;
     }
 
-    if (!isFinished) {
+    if (!(isRoundFinished || isGameOver())) {
       gameBoard.fill(index, currentPlayer.symbol);
       addSymbols(event);
     } else {
@@ -103,12 +117,14 @@ const game = (function () {
 
     if (checkWinner()) {
       resultText.textContent = `The winner is ${currentPlayer.name}`;
-      isFinished = true;
+      isRoundFinished = true;
       increaseScore(currentPlayer);
       updatePlayerScore();
-    } else if (gameBoard.isGameOver()) {
+      isGameOver();
+    } else if (gameBoard.isBoardFull()) {
       resultText.textContent = `It's a draw!`;
-      isFinished = true;
+      isRoundFinished = true;
+    } else if (isGameOver()) {
     } else {
       switchPlayer();
     }
