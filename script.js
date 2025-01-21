@@ -19,7 +19,11 @@ const player = (function () {
   return { makePlayer };
 })();
 
-const gameController = (function () {
+const game = (function () {
+  const playerOneScore = document.getElementById("player-one-score");
+  const playerTwoScore = document.getElementById("player-two-score");
+  const resultText = document.querySelector(".game-result");
+
   const winningCombination = [
     [0, 1, 2],
     [3, 4, 5],
@@ -35,6 +39,7 @@ const gameController = (function () {
     { name: " ", symbol: "X", score: 0 },
     { name: " ", symbol: "O", score: 0 },
   ];
+  const board = gameBoard.getBoard();
 
   let isFinished = false;
   let currentPlayer;
@@ -45,18 +50,35 @@ const gameController = (function () {
     players[1].name = object.playerO;
   };
 
-  const board = gameBoard.getBoard();
-
-  const resetGame = () => {
-    gameBoard.resetBoard();
+  const restartGame = () => {
     isFinished = false;
+    players[0].score = 0;
+    players[1].score = 0;
+    gameBoard.resetBoard();
+    updatePlayerScore();
+    resetText();
   };
+
+  const nextRound = () => {
+    isFinished = false;
+    gameBoard.resetBoard();
+    resetText();
+  };
+
+  const resetText = () => (resultText.innerText = "");
 
   const checkWinner = () => {
     return winningCombination.some((combination) =>
       combination.every((index) => board[index] === currentPlayer.symbol)
     );
   };
+
+  const updatePlayerScore = () => {
+    playerOneScore.innerText = players[0].score;
+    playerTwoScore.innerText = players[1].score;
+  };
+
+  const increaseScore = (player) => player.score++;
 
   const switchPlayer = () => {
     currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
@@ -67,8 +89,6 @@ const gameController = (function () {
   };
 
   const controller = (index, event) => {
-    const resultText = document.querySelector(".game-result");
-
     if (board[index] !== "empty" || index > board.length || index < 0) {
       resultText.textContent = "invalid input";
       return;
@@ -77,77 +97,98 @@ const gameController = (function () {
     if (!isFinished) {
       gameBoard.fill(index, currentPlayer.symbol);
       addSymbols(event);
+    } else {
+      return;
     }
 
     if (checkWinner()) {
       resultText.textContent = `The winner is ${currentPlayer.name}`;
       isFinished = true;
+      increaseScore(currentPlayer);
+      updatePlayerScore();
     } else if (gameBoard.isGameOver()) {
-      console.log(`It's a draw!`);
       resultText.textContent = `It's a draw!`;
       isFinished = true;
     } else {
-      console.log(`Not Finished`);
       switchPlayer();
     }
   };
 
-  return { controller, resetGame, assignPlayerNames };
+  return {
+    controller,
+    restartGame,
+    nextRound,
+    assignPlayerNames,
+  };
 })();
 
-const renderGameBoard = () => {
+const DOM = (function () {
   const ticTacToeBoard = document.getElementById("tic-tac-toe-board");
-  ticTacToeBoard.innerHTML = "";
-  const fragment = document.createDocumentFragment();
-  const board = gameBoard.getBoard();
-
-  for (let i = 0; i < board.length; i++) {
-    const box = document.createElement("button");
-    box.classList.add("spots");
-    box.dataset.index = i;
-    fragment.append(box);
-  }
-
-  ticTacToeBoard.appendChild(fragment);
-};
-
-const displayGame = () => {
-  renderGameBoard();
   const ticTacToeWrapper = document.getElementById("tic-tac-toe-wrapper");
-  ticTacToeWrapper.classList.remove("hidden");
-};
-
-const insertPlayerData = (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const playerNames = Object.fromEntries(formData);
-  gameController.assignPlayerNames(playerNames);
-};
-
-const displayForm = () => {
   const modal = document.getElementById("modal");
   const gameForm = document.getElementById("game-form");
-  modal.showModal();
 
+  const renderGameBoard = () => {
+    ticTacToeBoard.innerHTML = "";
+    const fragment = document.createDocumentFragment();
+    const board = gameBoard.getBoard();
+
+    for (let i = 0; i < board.length; i++) {
+      const box = document.createElement("button");
+      box.classList.add("spots");
+      box.dataset.index = i;
+      fragment.append(box);
+    }
+
+    ticTacToeBoard.appendChild(fragment);
+  };
+
+  const clearGameBoard = () => {
+    const spots = document.querySelectorAll(".spots");
+    spots.forEach((item) => (item.innerText = ""));
+  };
+
+  const displayGame = () => {
+    renderGameBoard();
+    ticTacToeWrapper.classList.remove("hidden");
+  };
+
+  const insertPlayerData = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const playerNames = Object.fromEntries(formData);
+    game.assignPlayerNames(playerNames);
+  };
+
+  const displayForm = () => {
+    modal.showModal();
+  };
+
+  const clickHandler = (event) => {
+    if (event.target.classList.contains("spots")) {
+      const indexTarget = event.target.dataset.index;
+      game.controller(indexTarget, event);
+    }
+
+    if (event.target.id === "restart") {
+      clearGameBoard();
+      game.restartGame();
+    }
+
+    if (event.target.id === "next-round") {
+      clearGameBoard();
+      game.nextRound();
+    }
+  };
+
+  document.addEventListener("click", (event) => clickHandler(event));
   gameForm.addEventListener("submit", (event) => {
     insertPlayerData(event);
     modal.close();
     displayGame();
   });
-};
 
-const clickHandler = (event) => {
-  if (event.target.classList.contains("spots")) {
-    const indexTarget = event.target.dataset.index;
-    gameController.controller(indexTarget, event);
-  }
+  return { displayForm };
+})();
 
-  if (event.target.id === "reset") {
-    renderGameBoard();
-    gameController.resetGame();
-  }
-};
-
-document.addEventListener("click", (event) => clickHandler(event));
-
-displayForm();
+DOM.displayForm();

@@ -11,9 +11,25 @@
 <body>
     <main id="tic-tac-toe-wrapper" class="hidden">
         <h1>Tic Tac Toe</h1>
-        <p class="game-result"></p>
+        <section>
+            <div class="player-info">
+                <p id="player-one-name">Player X</p>
+                <p id="player-one-score">0</p>
+            </div>
+            <div class="round-wrapper">
+                <p>ROUND</p>
+                <p id="round-number"></p>
+            </div>
+            <div class="player-info">
+                <p id="player-two-name">Player O</p>
+                <p id="player-two-symbol"></p>
+                <p id="player-two-score">0</p>
+            </div>
+            <p class="game-result"></p>
+        </section>
         <section id="tic-tac-toe-board"></section>
-        <button id="reset">reset game</button>
+        <button id="restart">restart</button>
+        <button id="next-round">next round</button>
     </main>
     <dialog id="modal">
         <form action="" id="game-form">

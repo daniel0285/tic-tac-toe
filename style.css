@@ -41,7 +41,7 @@ body {
 }
 
 button {
-  font-size: 1rem;
+  font-size: 2.5rem;
 }
 
 #tic-tac-toe-wrapper.hidden {
@@ -51,7 +51,6 @@ button {
 dialog {
   position: absolute;
   top: 50%;
-
   left: 50%;
   transform: translate(-50%, -50%);
 }
