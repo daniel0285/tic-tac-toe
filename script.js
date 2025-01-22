@@ -96,6 +96,7 @@ const game = (function () {
 
   const addSymbols = (event) => {
     event.target.textContent = currentPlayer.symbol;
+    event.target.classList.add(currentPlayer.symbol);
   };
 
   const controller = (index, event) => {
@@ -167,7 +168,10 @@ const DOM = (function () {
 
   const clearGameBoard = () => {
     const spots = document.querySelectorAll(".spots");
-    spots.forEach((item) => (item.innerText = ""));
+    spots.forEach((item) => {
+      item.innerText = "";
+      item.classList.remove("X", "O");
+    });
   };
 
   const displayGame = () => {
@@ -183,12 +187,8 @@ const DOM = (function () {
   };
 
   const changeInfoText = (p1, p2) => {
-    playerOne.innerText = `${p1.name} ${p1.symbol}`;
-    playerTwo.innerText = `${p2.name} ${p2.symbol}`;
-  };
-
-  const displayForm = () => {
-    formModal.showModal();
+    playerOne.innerText = `${p1.name} ( ${p1.symbol} )`;
+    playerTwo.innerText = `${p2.name} ( ${p2.symbol} )`;
   };
 
   const displayResult = (text) => {
@@ -201,7 +201,9 @@ const DOM = (function () {
   };
 
   const editBtn = (elemID, elemText) => {
-    const targetBtn = document.querySelector("#result-modal > button");
+    const targetBtn = document.querySelector(
+      "#result-modal > .modal-content > button"
+    );
     targetBtn.setAttribute("id", elemID);
     targetBtn.innerText = elemText;
   };
@@ -233,7 +235,5 @@ const DOM = (function () {
     displayGame();
   });
 
-  return { displayForm, displayResult, closeResult, changeInfoText, editBtn };
+  return { displayResult, closeResult, changeInfoText, editBtn };
 })();
-
-DOM.displayForm();

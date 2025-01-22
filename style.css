@@ -4,8 +4,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
-  outline: 1px solid red;
 }
 
 html,
@@ -24,37 +22,178 @@ body {
   align-items: center;
 }
 
-#tic-tac-toe-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
-  width: 100%;
-}
-
-#tic-tac-toe-board {
-  height: 50%;
-  width: 40%;
-  display: grid;
-  grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
-}
-
-button {
-  font-size: 2.5rem;
-}
-
-#tic-tac-toe-wrapper.hidden {
-  display: none;
-}
-
+/* Modals */
 dialog {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  border: none;
+  background-color: transparent;
 }
 
-.hide {
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+
+  outline: 2px solid #7d7d7d;
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+
+  h1 {
+    text-align: center;
+  }
+
+  p {
+    font-weight: bold;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  label,
+  input,
+  button {
+    color: rgb(31, 31, 31);
+  }
+
+  label {
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  input[type="text"] {
+    background-color: #d0d0d0;
+    outline: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.5s ease;
+
+    &:focus,
+    &:valid {
+      outline: 2px solid rgb(47, 162, 255);
+      background-color: #e4e4e4;
+    }
+  }
+
+  button {
+    background-color: #d0d0d0;
+    outline-color: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgb(47, 162, 255);
+      color: white;
+    }
+  }
+
+  label,
+  input {
+    display: block;
+  }
+}
+
+/* Tic Tac Toe  */
+
+#tic-tac-toe-board {
+  height: 300px;
+  width: 300px;
+  display: grid;
+  grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
+  gap: 1rem;
+
+  button {
+    font-size: 4rem;
+    border: none;
+    border-radius: 5px;
+    outline-color: transparent;
+    transition: all 0.3s ease;
+    background-color: #cecece;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .X {
+    background-color: rgb(255, 100, 100);
+    color: #242424;
+  }
+
+  .O {
+    background-color: rgb(89, 180, 255);
+    color: #242424;
+  }
+}
+
+#tic-tac-toe-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.3rem;
+
+  min-height: 100%;
+  width: 100%;
+
+  .player-info {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .one {
+    background-color: rgb(255, 100, 100);
+  }
+
+  .two {
+    background-color: rgb(89, 180, 255);
+  }
+
+  .player {
+    text-align: center;
+    font-weight: bold;
+    outline: 2px solid #242424;
+    width: 15ch;
+    height: max-content;
+    line-height: 1.3rem;
+    border-radius: 5px;
+  }
+
+  .name,
+  .score {
+    padding: 0.5rem;
+  }
+
+  .name {
+    background-color: #242424;
+    color: white;
+    border-bottom: 2px solid #242424;
+    font-size: 1rem;
+  }
+  .score {
+    color: #242424;
+    font-size: 1.8rem;
+  }
+}
+
+#tic-tac-toe-wrapper.hidden {
   display: none;
 }

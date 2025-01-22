@@ -11,41 +11,40 @@
 <body>
     <main id="tic-tac-toe-wrapper" class="hidden">
         <h1>Tic Tac Toe</h1>
-        <section>
-            <div class="player-info">
-                <p id="player-one-name-symbol">Player X</p>
-                <p id="player-one-score">0</p>
+        <section class="player-info">
+            <div class="player one">
+                <p id="player-one-name-symbol" class="name">Player X</p>
+                <p id="player-one-score" class="score">0</p>
             </div>
-            <div class="round-wrapper">
-                <p>ROUND</p>
-                <p id="round-number"></p>
-            </div>
-            <div class="player-info">
-                <p id="player-two-name-symbol">Player O</p>
-                <p id="player-two-score">0</p>
+            <div class="player two">
+                <p id="player-two-name-symbol" class="name">Player O</p>
+                <p id="player-two-score" class="score">0</p>
             </div>
         </section>
         <section id="tic-tac-toe-board"></section>
     </main>
-    <dialog id="form-modal">
-        <form action="" id="game-form">
-            <div class="input-field">
-                <label for="player-x">Player X Name</label>
-                <input type="text" id="player-x" name="playerX">
-            </div>
-            <div class="input-field">
-                <label for="player-o">Player O Name</label>
-                <input type="text" id="player-o" name="playerO">
-            </div>
-            <button type="submit">Start Game</button>
-        </form>
+    <dialog id="form-modal" open>
+        <div class="modal-content">
+            <h1>Tic Tac Toe</h1>
+            <form action="" id="game-form">
+                <div class="input-field">
+                    <label for="player-x">Player X Name</label>
+                    <input type="text" id="player-x" name="playerX" required>
+                </div>
+                <div class="input-field">
+                    <label for="player-o">Player O Name</label>
+                    <input type="text" id="player-o" name="playerO" required>
+                </div>
+                <button type="submit">Start Game</button>
+            </form>
+        </div>
     </dialog>
     <dialog id="result-modal">
-        <p id="result-text"></p>
-        <button id="next-round" class="result-btn">Next Round</button>
+        <div class="modal-content">
+            <p id="result-text"></p>
+            <button id="next-round" class="result-btn">Next Round</button>
+        </div>
     </dialog>
-
-
     <script src="script.js"></script>
 </body>
 
