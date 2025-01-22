@@ -13,7 +13,7 @@
         <h1>Tic Tac Toe</h1>
         <section>
             <div class="player-info">
-                <p id="player-one-name">Player X</p>
+                <p id="player-one-name-symbol">Player X</p>
                 <p id="player-one-score">0</p>
             </div>
             <div class="round-wrapper">
@@ -21,17 +21,13 @@
                 <p id="round-number"></p>
             </div>
             <div class="player-info">
-                <p id="player-two-name">Player O</p>
-                <p id="player-two-symbol"></p>
+                <p id="player-two-name-symbol">Player O</p>
                 <p id="player-two-score">0</p>
             </div>
-            <p class="game-result"></p>
         </section>
         <section id="tic-tac-toe-board"></section>
-        <button id="restart">restart</button>
-        <button id="next-round">next round</button>
     </main>
-    <dialog id="modal">
+    <dialog id="form-modal">
         <form action="" id="game-form">
             <div class="input-field">
                 <label for="player-x">Player X Name</label>
@@ -44,6 +40,11 @@
             <button type="submit">Start Game</button>
         </form>
     </dialog>
+    <dialog id="result-modal">
+        <p id="result-text"></p>
+        <button id="next-round" class="result-btn">Next Round</button>
+    </dialog>
+
 
     <script src="script.js"></script>
 </body>

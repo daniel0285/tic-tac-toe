@@ -22,7 +22,6 @@ const player = (function () {
 const game = (function () {
   const playerOneScore = document.getElementById("player-one-score");
   const playerTwoScore = document.getElementById("player-two-score");
-  const resultText = document.querySelector(".game-result");
 
   const winningCombination = [
     [0, 1, 2],
@@ -48,6 +47,7 @@ const game = (function () {
   const assignPlayerNames = (object) => {
     players[0].name = object.playerX;
     players[1].name = object.playerO;
+    DOM.changeInfoText(players[0], players[1]);
   };
 
   const restartGame = () => {
@@ -56,24 +56,22 @@ const game = (function () {
     currentPlayer = players[0];
     gameBoard.resetBoard();
     updatePlayerScore();
-    resetText();
   };
 
   const nextRound = () => {
     isRoundFinished = false;
     currentPlayer = players[0];
     gameBoard.resetBoard();
-    resetText();
   };
 
   const isGameOver = () => {
-    if (players[0].score === 2 || players[1].score === 2) {
-      resultText.textContent = `${currentPlayer.name} won the game`;
+    if (players[0].score === 5 || players[1].score === 5) {
+      DOM.displayResult(`${currentPlayer.name} won the game!`);
+      DOM.editBtn("restart", "Restart");
       return true;
     }
   };
 
-  const resetText = () => (resultText.innerText = "");
   const resetPlayersScore = () => {
     players[0].score = 0;
     players[1].score = 0;
@@ -104,30 +102,34 @@ const game = (function () {
     if (isGameOver()) return;
 
     if (board[index] !== "empty" || index > board.length || index < 0) {
-      resultText.textContent = "invalid input";
       return;
     }
 
-    if (!(isRoundFinished || isGameOver())) {
+    if (!isRoundFinished) {
       gameBoard.fill(index, currentPlayer.symbol);
       addSymbols(event);
-    } else {
-      return;
-    }
 
-    if (checkWinner()) {
-      resultText.textContent = `The winner is ${currentPlayer.name}`;
-      isRoundFinished = true;
-      increaseScore(currentPlayer);
-      updatePlayerScore();
-      isGameOver();
-    } else if (gameBoard.isBoardFull()) {
-      resultText.textContent = `It's a draw!`;
-      isRoundFinished = true;
-    } else if (isGameOver()) {
-    } else {
-      switchPlayer();
+      if (checkWinner()) {
+        handleWin();
+      } else if (gameBoard.isBoardFull()) {
+        handleDraw();
+      } else {
+        switchPlayer();
+      }
     }
+  };
+
+  const handleWin = () => {
+    DOM.displayResult(`The winner is ${currentPlayer.name}`);
+    isRoundFinished = true;
+    increaseScore(currentPlayer);
+    updatePlayerScore();
+    isGameOver();
+  };
+
+  const handleDraw = () => {
+    DOM.displayResult(`It's a draw!`);
+    isRoundFinished = true;
   };
 
   return {
@@ -141,7 +143,11 @@ const game = (function () {
 const DOM = (function () {
   const ticTacToeBoard = document.getElementById("tic-tac-toe-board");
   const ticTacToeWrapper = document.getElementById("tic-tac-toe-wrapper");
-  const modal = document.getElementById("modal");
+  const playerOne = document.getElementById("player-one-name-symbol");
+  const playerTwo = document.getElementById("player-two-name-symbol");
+  const formModal = document.getElementById("form-modal");
+  const resultModal = document.getElementById("result-modal");
+  const resultText = document.getElementById("result-text");
   const gameForm = document.getElementById("game-form");
 
   const renderGameBoard = () => {
@@ -176,8 +182,28 @@ const DOM = (function () {
     game.assignPlayerNames(playerNames);
   };
 
+  const changeInfoText = (p1, p2) => {
+    playerOne.innerText = `${p1.name} ${p1.symbol}`;
+    playerTwo.innerText = `${p2.name} ${p2.symbol}`;
+  };
+
   const displayForm = () => {
-    modal.showModal();
+    formModal.showModal();
+  };
+
+  const displayResult = (text) => {
+    resultText.innerText = text;
+    resultModal.show();
+  };
+
+  const closeResult = () => {
+    resultModal.close();
+  };
+
+  const editBtn = (elemID, elemText) => {
+    const targetBtn = document.querySelector("#result-modal > button");
+    targetBtn.setAttribute("id", elemID);
+    targetBtn.innerText = elemText;
   };
 
   const clickHandler = (event) => {
@@ -188,11 +214,14 @@ const DOM = (function () {
 
     if (event.target.id === "restart") {
       clearGameBoard();
+      closeResult();
+      editBtn("next-round", "Next Round");
       game.restartGame();
     }
 
     if (event.target.id === "next-round") {
       clearGameBoard();
+      closeResult();
       game.nextRound();
     }
   };
@@ -200,11 +229,11 @@ const DOM = (function () {
   document.addEventListener("click", (event) => clickHandler(event));
   gameForm.addEventListener("submit", (event) => {
     insertPlayerData(event);
-    modal.close();
+    formModal.close();
     displayGame();
   });
 
-  return { displayForm };
+  return { displayForm, displayResult, closeResult, changeInfoText, editBtn };
 })();
 
 DOM.displayForm();
