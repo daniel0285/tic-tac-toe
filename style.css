@@ -1,3 +1,19 @@
+:root {
+  --bg-clr: rgb(242, 242, 242);
+  --txt-clr-dark: rgb(40, 40, 40);
+  --txt-clr-light: rgb(244, 244, 244);
+  --border-clr: rgb(105, 105, 105);
+  --modal-accent: rgb(0, 170, 255);
+  --modal-btn-accent: rgb(43, 43, 43);
+  --modal-bg-clr: rgb(239, 239, 239);
+  --modal-bd-clr: rgb(255, 0, 0);
+  --input-clr: rgb(179, 179, 179);
+  --input-focus-clr: rgb(223, 223, 223);
+  --player-X-clr: rgb(204, 112, 112);
+  --player-O-clr: rgb(93, 163, 198);
+  --board-spot-clr: rgb(126, 126, 126);
+}
+
 *,
 *::before,
 *::after {
@@ -15,6 +31,7 @@ body {
   min-height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: var(--bg-clr);
 
   display: flex;
   flex-flow: column;
@@ -23,6 +40,7 @@ body {
 }
 
 /* Modals */
+
 dialog {
   position: absolute;
   top: 50%;
@@ -39,8 +57,8 @@ dialog {
   gap: 1.5rem;
   text-align: center;
 
-  outline: 2px solid #7d7d7d;
-  background-color: white;
+  outline: 2px solid var(--border-clr);
+  background-color: var(--modal-bg-clr);
   border-radius: 10px;
   padding: 1.5rem;
 
@@ -61,7 +79,7 @@ dialog {
   label,
   input,
   button {
-    color: rgb(31, 31, 31);
+    color: var(--txt-clr-dark);
   }
 
   label {
@@ -71,24 +89,41 @@ dialog {
   }
 
   input[type="text"] {
-    background-color: #d0d0d0;
+    background-color: var(--input-clr);
     outline: transparent;
     border: none;
     border-radius: 5px;
     padding: 0.5rem;
     font-size: 1rem;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 
     &:focus,
     &:valid {
-      outline: 2px solid rgb(47, 162, 255);
-      background-color: #e4e4e4;
+      background-color: var(--input-focus-clr);
     }
   }
 
+  label.x {
+    color: var(--player-X-clr);
+  }
+
+  .x:focus,
+  .x:valid {
+    outline: 2px solid var(--player-X-clr);
+  }
+
+  label.o {
+    color: var(--player-O-clr);
+  }
+
+  .o:focus,
+  .o:valid {
+    outline: 2px solid var(--player-O-clr);
+  }
+
   button {
-    background-color: #d0d0d0;
-    outline-color: transparent;
+    background-color: var(--input-clr);
+    outline: 1px solid var(--border-clr);
     border: none;
     border-radius: 5px;
     padding: 0.5rem;
@@ -98,8 +133,9 @@ dialog {
 
     &:hover,
     &:focus-visible {
-      background-color: rgb(47, 162, 255);
-      color: white;
+      background-color: var(--modal-btn-accent);
+      color: var(--txt-clr-light);
+      outline-color: transparent;
     }
   }
 
@@ -119,12 +155,14 @@ dialog {
   gap: 1rem;
 
   button {
-    font-size: 4rem;
+    font-size: 4.5rem;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     outline-color: transparent;
-    transition: all 0.3s ease;
-    background-color: #cecece;
+    transition: all 0.5s ease-in-out;
+    background-color: var(--input-clr);
+    color: var(--txt-clr-dark);
     opacity: 1;
 
     &:hover {
@@ -133,13 +171,13 @@ dialog {
   }
 
   .X {
-    background-color: rgb(255, 100, 100);
-    color: #242424;
+    background-color: var(--player-X-clr);
+    color: var(--txt-clr-dark);
   }
 
   .O {
-    background-color: rgb(89, 180, 255);
-    color: #242424;
+    background-color: var(--player-O-clr);
+    color: var(--txt-clr-dark);
   }
 }
 
@@ -160,17 +198,17 @@ dialog {
   }
 
   .one {
-    background-color: rgb(255, 100, 100);
+    background-color: var(--player-X-clr);
   }
 
   .two {
-    background-color: rgb(89, 180, 255);
+    background-color: var(--player-O-clr);
   }
 
   .player {
     text-align: center;
     font-weight: bold;
-    outline: 2px solid #242424;
+    outline: 2px solid var(--txt-clr-dark);
     width: 15ch;
     height: max-content;
     line-height: 1.3rem;
@@ -183,13 +221,13 @@ dialog {
   }
 
   .name {
-    background-color: #242424;
-    color: white;
-    border-bottom: 2px solid #242424;
+    background-color: var(--txt-clr-dark);
+    color: var(--txt-clr-light);
+    border-bottom: 2px solid var(--txt-clr-dark);
     font-size: 1rem;
   }
   .score {
-    color: #242424;
+    color: var(--txt-clr-dark);
     font-size: 1.8rem;
   }
 }

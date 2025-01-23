@@ -15,7 +15,7 @@ const gameBoard = (function () {
 })();
 
 const player = (function () {
-  const makePlayer = (name, symbol) => ({ name, symbol });
+  const makePlayer = (name, symbol) => ({ name, symbol, score: 0 });
   return { makePlayer };
 })();
 
@@ -33,12 +33,12 @@ const game = (function () {
     [0, 4, 8],
     [2, 4, 6],
   ];
+  const board = gameBoard.getBoard();
 
   const players = [
-    { name: " ", symbol: "X", score: 0 },
-    { name: " ", symbol: "O", score: 0 },
+    player.makePlayer("Player 1", "X"),
+    player.makePlayer("Player 2", "O"),
   ];
-  const board = gameBoard.getBoard();
 
   let isRoundFinished = false;
   let currentPlayer;
@@ -67,7 +67,7 @@ const game = (function () {
   const isGameOver = () => {
     if (players[0].score === 5 || players[1].score === 5) {
       DOM.displayResult(`${currentPlayer.name} won the game!`);
-      DOM.editBtn("restart", "Restart");
+      DOM.setBtnAttribute("restart", "Restart");
       return true;
     }
   };
@@ -200,7 +200,7 @@ const DOM = (function () {
     resultModal.close();
   };
 
-  const editBtn = (elemID, elemText) => {
+  const setBtnAttribute = (elemID, elemText) => {
     const targetBtn = document.querySelector(
       "#result-modal > .modal-content > button"
     );
@@ -217,7 +217,7 @@ const DOM = (function () {
     if (event.target.id === "restart") {
       clearGameBoard();
       closeResult();
-      editBtn("next-round", "Next Round");
+      setBtnAttribute("next-round", "Next Round");
       game.restartGame();
     }
 
@@ -235,5 +235,5 @@ const DOM = (function () {
     displayGame();
   });
 
-  return { displayResult, closeResult, changeInfoText, editBtn };
+  return { displayResult, closeResult, changeInfoText, setBtnAttribute };
 })();
